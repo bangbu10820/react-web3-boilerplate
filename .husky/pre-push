@@ -1,0 +1,17 @@
+#!/bin/bash
+# Prevents force-pushing to master
+
+echo -e "===\n>> Pre-push Hook: Checking branch name..."
+
+# Get the current branch name
+BRANCH=$(git symbolic-ref --short HEAD)
+PROTECTED_BRANCHES="^(main|dev)"
+
+if [[ "$BRANCH" =~ $PROTECTED_BRANCHES ]]; then
+  echo -e "\n🚫 Cannot push to remote $BRANCH branch, please create your own branch and use PR."
+  exit 1  # Exit with error code to prevent the push
+fi
+
+echo -e ">> Finish checking branch name.\n==="
+
+exit 0

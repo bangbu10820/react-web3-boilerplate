@@ -1,0 +1,22 @@
+{
+  "app_title": "Bản mẫu",
+  "app_auth_sign_in_with_google_button": "Đăng nhập với Google",
+  "-": "-",
+  "theme_switch_light": "Sáng",
+  "theme_switch_dark": "Tối",
+  "theme_switch_system": "Hệ thống",
+  "theme_switch_toggle_theme": "Đổi theme",
+  "--": "--",
+  "command_menu_dashboard": "Dashboard",
+  "command_menu_command_group_pages": "Trang",
+  "command_menu_command_group_pages_401": "401",
+  "command_menu_command_group_pages_403": "403",
+  "command_menu_command_group_pages_404": "404",
+  "command_menu_command_group_pages_500": "500",
+  "command_menu_command_group_pages_503": "503",
+  "command_menu_command_group_suggestions": "Gợi ý",
+  "command_menu_command_group_theme": "Theme",
+  "command_menu_theme_switch_light": "Sáng",
+  "command_menu_theme_switch_dark": "Tối",
+  "command_menu_theme_switch_system": "Hệ thống"
+}

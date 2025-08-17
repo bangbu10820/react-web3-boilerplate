@@ -1,0 +1,22 @@
+{
+  "app_title": "Boilerplate App",
+  "app_auth_sign_in_with_google_button": "Sign In With Google",
+  "-": "-",
+  "theme_switch_light": "Light",
+  "theme_switch_dark": "Dark",
+  "theme_switch_system": "System",
+  "theme_switch_toggle_theme": "Toggle Theme",
+  "--": "--",
+  "command_menu_dashboard": "Dashboard",
+  "command_menu_command_group_pages": "Pages",
+  "command_menu_command_group_pages_401": "401",
+  "command_menu_command_group_pages_403": "403",
+  "command_menu_command_group_pages_404": "404",
+  "command_menu_command_group_pages_500": "500",
+  "command_menu_command_group_pages_503": "503",
+  "command_menu_command_group_suggestions": "Suggestions",
+  "command_menu_command_group_theme": "Theme",
+  "command_menu_theme_switch_light": "Light",
+  "command_menu_theme_switch_dark": "Dark",
+  "command_menu_theme_switch_system": "System"
+}
