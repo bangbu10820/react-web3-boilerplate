@@ -16,9 +16,8 @@ import reportWebVitals from "./reportWebVitals.ts";
 import "./styles.css";
 import { AuthProvider, useAuth } from "./context/auth-context.tsx";
 import { SearchProvider } from "./context/search-context.tsx";
-import { setupAppKit } from "./integrations/reown-appkit/provider.tsx";
+import { WagmiAppkitProvider } from "./integrations/reown-appkit/provider.tsx";
 
-setupAppKit();
 // Create a new router instance
 
 export const rootRouter = createRouter({
@@ -60,15 +59,17 @@ if (rootElement && !rootElement.innerHTML) {
   root.render(
     <StrictMode>
       <TanStackQueryProvider>
-        <LocalizationProvider>
-          <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
-            <AuthProvider>
-              <SearchProvider>
-                <App />
-              </SearchProvider>
-            </AuthProvider>
-          </ThemeProvider>
-        </LocalizationProvider>
+        <WagmiAppkitProvider>
+          <LocalizationProvider>
+            <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+              <AuthProvider>
+                <SearchProvider>
+                  <App />
+                </SearchProvider>
+              </AuthProvider>
+            </ThemeProvider>
+          </LocalizationProvider>
+        </WagmiAppkitProvider>
       </TanStackQueryProvider>
     </StrictMode>
   );
