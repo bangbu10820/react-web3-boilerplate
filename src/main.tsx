@@ -1,4 +1,4 @@
-import { RouterProvider, createRouter } from "@tanstack/react-router";
+import { createRouter } from "@tanstack/react-router";
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 
@@ -14,9 +14,10 @@ import { routeTree } from "./routeTree.gen";
 
 import reportWebVitals from "./reportWebVitals.ts";
 import "./styles.css";
-import { AuthProvider, useAuth } from "./context/auth-context.tsx";
+import { AuthProvider } from "./context/auth-context.tsx";
 import { SearchProvider } from "./context/search-context.tsx";
 import { WagmiAppkitProvider } from "./integrations/reown-appkit/provider.tsx";
+import App from "./app.tsx";
 
 // Create a new router instance
 
@@ -39,19 +40,6 @@ declare module "@tanstack/react-router" {
   }
 }
 
-function App() {
-  const auth = useAuth();
-  return (
-    <RouterProvider
-      router={rootRouter}
-      context={{
-        queryClient: queryClient,
-        isAuthenticated: auth.isAuthenticated,
-      }}
-    />
-  );
-}
-
 // Render the app
 const rootElement = document.getElementById("app");
 if (rootElement && !rootElement.innerHTML) {
@@ -64,7 +52,7 @@ if (rootElement && !rootElement.innerHTML) {
             <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
               <AuthProvider>
                 <SearchProvider>
-                  <App />
+                  <App rootRouter={rootRouter} queryClient={queryClient} />
                 </SearchProvider>
               </AuthProvider>
             </ThemeProvider>

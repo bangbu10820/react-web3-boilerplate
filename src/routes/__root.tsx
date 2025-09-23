@@ -14,6 +14,8 @@ import GeneralError from "@/features/errors/general-error";
 import { NavigationProgress } from "@/components/navigation-progress";
 import { Toaster } from "@/components/ui/sonner";
 
+const IS_DEV = import.meta.env.DEV;
+
 interface MyRouterContext {
   queryClient: QueryClient;
   isAuthenticated: boolean;
@@ -26,18 +28,20 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
       <HeadContent />
       <Outlet />
       <Toaster />
-      <TanstackDevtools
-        config={{
-          position: "bottom-right",
-        }}
-        plugins={[
-          {
-            name: "Tanstack Router",
-            render: <TanStackRouterDevtoolsPanel />,
-          },
-          TanStackQueryDevtools,
-        ]}
-      />
+      {IS_DEV && (
+        <TanstackDevtools
+          config={{
+            position: "bottom-right",
+          }}
+          plugins={[
+            {
+              name: "Tanstack Router",
+              render: <TanStackRouterDevtoolsPanel />,
+            },
+            TanStackQueryDevtools,
+          ]}
+        />
+      )}
     </>
   ),
   notFoundComponent: NotFoundError,
