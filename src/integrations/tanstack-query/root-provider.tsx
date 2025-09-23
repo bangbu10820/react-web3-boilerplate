@@ -1,5 +1,5 @@
 import { QueryCache, QueryClient } from "@tanstack/react-query";
-import { del, get, set } from "idb-keyval";
+import { createStore, del, get, set } from "idb-keyval";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { AxiosError } from "axios";
 import { toast } from "sonner";
@@ -10,58 +10,47 @@ import type {
 import { rootRouter } from "@/main";
 // import { resetAuthStore } from "@/stores/auth.store";
 
+const customStore = createStore("BANGBU_V1_INDEXED_DB", "keyval");
+
 const createIndexedDBPersister = (idbValidKey: IDBValidKey = "vite-app") => {
   return {
     persistClient: async (client: PersistedClient) => {
-      await set(idbValidKey, client);
+      await set(idbValidKey, client, customStore);
     },
     restoreClient: async () => {
-      return await get<PersistedClient>(idbValidKey);
+      return await get<PersistedClient>(idbValidKey, customStore);
     },
     removeClient: async () => {
-      await del(idbValidKey);
+      await del(idbValidKey, customStore);
     },
   } as Persister;
 };
 
-export function getContext() {
-  const persister = createIndexedDBPersister("vite-app");
-  const queryClient = new QueryClient({
-    queryCache: new QueryCache({
-      onError: (error) => {
-        if (error instanceof AxiosError) {
-          if (error.response?.status === 401) {
-            // toast.error("Session expired!");
-            // resetAuthStore();
-            // const redirect = `${rootRouter.history.location.href}`;
-            // rootRouter.navigate({ to: "/sign-in", search: { redirect } });
-          }
-          if (error.response?.status === 500) {
-            toast.error("Internal Server Error!");
-            rootRouter.navigate({ to: "/500" });
-          }
-          if (error.response?.status === 403) {
-            rootRouter.navigate({ to: "/403", replace: true });
-          }
-        }
-      },
-    }),
-  });
-  return {
-    queryClient,
-    persister,
-  };
-}
+const persister = createIndexedDBPersister("vite-app");
 
-export function Provider({
-  children,
-  queryClient,
-  persister,
-}: {
-  children: React.ReactNode;
-  queryClient: QueryClient;
-  persister: Persister;
-}) {
+export const queryClient = new QueryClient({
+  queryCache: new QueryCache({
+    onError: (error) => {
+      if (error instanceof AxiosError) {
+        if (error.response?.status === 401) {
+          // toast.error("Session expired!");
+          // resetAuthStore();
+          // const redirect = `${rootRouter.history.location.href}`;
+          // rootRouter.navigate({ to: "/sign-in", search: { redirect } });
+        }
+        if (error.response?.status === 500) {
+          toast.error("Internal Server Error!");
+          rootRouter.navigate({ to: "/500" });
+        }
+        if (error.response?.status === 403) {
+          rootRouter.navigate({ to: "/403", replace: true });
+        }
+      }
+    },
+  }),
+});
+
+export function Provider({ children }: { children: React.ReactNode }) {
   return (
     <PersistQueryClientProvider
       client={queryClient}

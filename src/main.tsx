@@ -2,7 +2,10 @@ import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 
-import * as TanStackQueryProvider from "./integrations/tanstack-query/root-provider.tsx";
+import {
+  Provider as TanStackQueryProvider,
+  queryClient,
+} from "./integrations/tanstack-query/root-provider.tsx";
 import { LocalizationProvider } from "./integrations/react-intl/localization-provider.tsx";
 import { ThemeProvider } from "./context/theme-context.tsx";
 
@@ -18,12 +21,10 @@ import { setupAppKit } from "./integrations/reown-appkit/provider.tsx";
 setupAppKit();
 // Create a new router instance
 
-const TanStackQueryProviderContext = TanStackQueryProvider.getContext();
-
 export const rootRouter = createRouter({
   routeTree,
   context: {
-    ...TanStackQueryProviderContext,
+    queryClient: queryClient,
     isAuthenticated: false,
   },
   defaultPreload: "intent",
@@ -45,7 +46,7 @@ function App() {
     <RouterProvider
       router={rootRouter}
       context={{
-        ...TanStackQueryProviderContext,
+        queryClient: queryClient,
         isAuthenticated: auth.isAuthenticated,
       }}
     />
@@ -58,7 +59,7 @@ if (rootElement && !rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement);
   root.render(
     <StrictMode>
-      <TanStackQueryProvider.Provider {...TanStackQueryProviderContext}>
+      <TanStackQueryProvider>
         <LocalizationProvider>
           <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
             <AuthProvider>
@@ -68,7 +69,7 @@ if (rootElement && !rootElement.innerHTML) {
             </AuthProvider>
           </ThemeProvider>
         </LocalizationProvider>
-      </TanStackQueryProvider.Provider>
+      </TanStackQueryProvider>
     </StrictMode>
   );
 }
