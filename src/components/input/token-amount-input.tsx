@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 interface TokenAmountInputProps {
   value: string;
@@ -7,6 +7,8 @@ interface TokenAmountInputProps {
   placeholder?: string;
   className?: string;
   style?: React.CSSProperties;
+  "aria-label"?: string;
+  "aria-describedby"?: string;
 }
 
 export const TokenAmountInput: React.FC<TokenAmountInputProps> = ({
@@ -16,8 +18,16 @@ export const TokenAmountInput: React.FC<TokenAmountInputProps> = ({
   placeholder = "0.0",
   className = "",
   style = {},
+  "aria-describedby": ariaDescribedby,
+  "aria-label": ariaLabel,
 }) => {
   const [displayValue, setDisplayValue] = useState(value);
+  const onChangeRef = useRef(onChange);
+
+  // Update the ref whenever onChange changes
+  useEffect(() => {
+    onChangeRef.current = onChange;
+  }, [onChange]);
 
   const validateAndFormatInput = useCallback(
     (inputValue: string): string => {
@@ -71,16 +81,20 @@ export const TokenAmountInput: React.FC<TokenAmountInputProps> = ({
 
     // Validate and format the incoming value from external source
     const validatedValue = validateAndFormatInput(value);
-    setDisplayValue(validatedValue);
+
+    // Only update display value if it's different to avoid unnecessary state updates
+    if (validatedValue !== displayValue) {
+      setDisplayValue(validatedValue);
+    }
 
     // If validation changed the value, notify parent
     if (validatedValue !== value) {
       const actualValue = validatedValue.endsWith(".")
         ? validatedValue + "0"
         : validatedValue;
-      onChange(actualValue);
+      onChangeRef.current(actualValue);
     }
-  }, [value, displayValue, validateAndFormatInput, onChange]);
+  }, [value, validateAndFormatInput]);
 
   // Memoized function to handle decimal truncation
   const handleDecimalTruncation = useCallback(() => {
@@ -98,10 +112,10 @@ export const TokenAmountInput: React.FC<TokenAmountInputProps> = ({
         const actualValue = newDisplayValue.endsWith(".")
           ? newDisplayValue + "0"
           : newDisplayValue;
-        onChange(actualValue);
+        onChangeRef.current(actualValue);
       }
     }
-  }, [displayValue, decimals, onChange]);
+  }, [displayValue, decimals]);
 
   // Effect to handle decimals change - revalidate current value
   useEffect(() => {
@@ -118,7 +132,7 @@ export const TokenAmountInput: React.FC<TokenAmountInputProps> = ({
     const actualValue = validatedValue.endsWith(".")
       ? validatedValue + "0"
       : validatedValue;
-    onChange(actualValue);
+    onChangeRef.current(actualValue);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -162,6 +176,9 @@ export const TokenAmountInput: React.FC<TokenAmountInputProps> = ({
   return (
     <input
       type="text"
+      inputMode="decimal"
+      aria-label={ariaLabel}
+      aria-describedby={ariaDescribedby}
       value={displayValue}
       onChange={handleInputChange}
       onKeyDown={handleKeyDown}
