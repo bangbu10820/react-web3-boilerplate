@@ -58,8 +58,8 @@ axiosClient.interceptors.response.use(
       try {
         const tokenResponse = await tokenRefreshService.refreshToken();
 
-        if (tokenResponse.accessToken && originalRequest.headers) {
-          originalRequest.headers.Authorization = `Bearer ${tokenResponse.accessToken}`;
+        if (tokenResponse.jwt && originalRequest.headers) {
+          originalRequest.headers.Authorization = `Bearer ${tokenResponse.jwt}`;
         }
 
         return axiosClient(originalRequest);
