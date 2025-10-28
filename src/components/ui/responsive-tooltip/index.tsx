@@ -37,7 +37,7 @@ type ResponsiveTooltipProps = {
   modal?: boolean;
 };
 
-function Provider(props: ResponsiveTooltipProps) {
+function ResponsiveTooltip(props: ResponsiveTooltipProps) {
   const isMobile = useIsMobile();
 
   const Comp = isMobile ? Popover : Tooltip;
@@ -48,23 +48,42 @@ function Provider(props: ResponsiveTooltipProps) {
     </ResponsiveTooltipContext.Provider>
   );
 }
+ResponsiveTooltip.displayName = "ResponsiveTooltip";
 
-function Trigger(props: TooltipTriggerProps & PopoverTriggerProps) {
-  const { isMobile } = use(ResponsiveTooltipContext)!;
+function ResponsiveTooltipTrigger(
+  props: TooltipTriggerProps & PopoverTriggerProps
+) {
+  const { isMobile } = useResponsiveTooltip();
 
   const Comp = isMobile ? PopoverTrigger : TooltipTrigger;
 
   return <Comp {...props} />;
 }
+ResponsiveTooltipTrigger.displayName = "ResponsiveTooltipTrigger";
 
-function Content(props: TooltipContentProps & PopoverContentProps) {
-  const { isMobile } = use(ResponsiveTooltipContext)!;
+function ResponsiveTooltipContent(
+  props: TooltipContentProps & PopoverContentProps
+) {
+  const { isMobile } = useResponsiveTooltip();
 
   const Comp = isMobile ? PopoverContent : TooltipContent;
 
   return <Comp {...props} />;
 }
+ResponsiveTooltipContent.displayName = "ResponsiveTooltipContent";
 
-export const ResponsiveTooltip = Provider;
-export const ResponsiveTooltipTrigger = Trigger;
-export const ResponsiveTooltipContent = Content;
+function useResponsiveTooltip() {
+  const context = use(ResponsiveTooltipContext);
+  if (!context) {
+    throw new Error(
+      "ResponsiveTooltip components must be used within a ResponsiveTooltip provider"
+    );
+  }
+  return context;
+}
+
+export {
+  ResponsiveTooltip,
+  ResponsiveTooltipTrigger,
+  ResponsiveTooltipContent,
+};
