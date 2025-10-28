@@ -29,6 +29,34 @@ const createIndexedDBPersister = (idbValidKey: IDBValidKey = "vite-app") => {
 const persister = createIndexedDBPersister("vite-app");
 
 export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: (failureCount, error) => {
+        if (import.meta.env.DEV) console.log({ failureCount, error });
+
+        if (import.meta.env.DEV) return false;
+        if (failureCount > 3 && import.meta.env.PROD) return false;
+
+        return !(
+          error instanceof AxiosError &&
+          [401, 403].includes(error.response?.status ?? 0)
+        );
+      },
+      refetchOnWindowFocus: import.meta.env.PROD,
+      staleTime: 10 * 1000, // 10s
+    },
+    mutations: {
+      onError: (error) => {
+        // handleServerError(error);
+
+        if (error instanceof AxiosError) {
+          if (error.response?.status === 304) {
+            toast.error("Content not modified!");
+          }
+        }
+      },
+    },
+  },
   queryCache: new QueryCache({
     onError: (error) => {
       if (error instanceof AxiosError) {
