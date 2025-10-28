@@ -1,6 +1,6 @@
 import { FormattedMessage } from "react-intl";
 import { ThemeSwitch } from "@/components/theme-switch";
-import { Header } from "@/components/header";
+import { Header } from "@/components/layout/header";
 import { TypographyH1 } from "@/components/typography";
 import { Search } from "@/components/search";
 import { ConnectWalletButton } from "@/components/connect-wallet-button";
