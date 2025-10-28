@@ -11,7 +11,7 @@ export function AuthenticatedLayout({ children }: Props) {
   return (
     <>
       <SidebarProvider>
-        <AppSidebar variant="inset" />
+        <AppSidebar />
         <SidebarInset>
           <div id="content">{children ? children : <Outlet />}</div>
         </SidebarInset>
