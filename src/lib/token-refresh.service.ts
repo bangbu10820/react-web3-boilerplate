@@ -4,13 +4,14 @@ import {
   signOut as authStoreSignOut,
   getAccessToken,
   getRefreshToken,
-  setTokens,
+  setAccessToken,
+  setRefreshToken,
 } from "@/stores/auth.store";
 import { isTokenExpiringSoon } from "@/utils/jwt.utils";
 
 interface TokenResponse {
-  accessToken: string;
-  refreshToken: string;
+  jwt: string;
+  jwtRefresh?: string;
 }
 
 const VITE_REFRESH_TOKEN_API_URL = import.meta.env.VITE_REFRESH_TOKEN_API_URL;
@@ -38,10 +39,17 @@ class TokenRefreshService {
 
     // Create refresh promise
     this.refreshPromise = axios
-      .post<TokenResponse>(VITE_REFRESH_TOKEN_API_URL, { refreshToken })
+      .get<TokenResponse>(VITE_REFRESH_TOKEN_API_URL, {
+        headers: {
+          Authorization: `Bearer ${refreshToken}`,
+        },
+      })
       .then((response: AxiosResponse<TokenResponse>) => {
-        const { accessToken, refreshToken: newRefreshToken } = response.data;
-        setTokens(accessToken, newRefreshToken);
+        const { jwt: accessToken, jwtRefresh } = response.data;
+        setAccessToken(accessToken);
+        if (jwtRefresh) {
+          setRefreshToken(jwtRefresh);
+        }
         return response.data;
       })
       .catch((error) => {
