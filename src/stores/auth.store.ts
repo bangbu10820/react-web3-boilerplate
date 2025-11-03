@@ -43,6 +43,9 @@ const useAuthStore = createControlledStore<AuthState>()(
   )
 );
 
+export const useIsAuthenticated = () =>
+  useAuthStore((state) => !!state.accessToken);
+
 export const useAccessToken = () => useAuthStore((state) => state.accessToken);
 export const useRefreshToken = () =>
   useAuthStore((state) => state.refreshToken);

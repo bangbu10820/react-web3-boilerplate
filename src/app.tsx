@@ -1,5 +1,5 @@
 import { RouterProvider } from "@tanstack/react-router";
-import { useAuth } from "./context/auth-context";
+import { useIsAuthenticated } from "./stores/auth.store";
 import type { AnyRouter } from "@tanstack/react-router";
 import type { QueryClient } from "@tanstack/react-query";
 
@@ -9,13 +9,14 @@ interface AppProps {
 }
 
 export default function App({ rootRouter, queryClient }: AppProps) {
-  const auth = useAuth();
+  const isAuthenticated = useIsAuthenticated();
+
   return (
     <RouterProvider
       router={rootRouter}
       context={{
         queryClient: queryClient,
-        isAuthenticated: auth.isAuthenticated,
+        isAuthenticated: isAuthenticated,
       }}
     />
   );
