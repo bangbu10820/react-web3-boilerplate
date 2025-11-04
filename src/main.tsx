@@ -14,7 +14,6 @@ import { routeTree } from "./routeTree.gen";
 
 import reportWebVitals from "./reportWebVitals.ts";
 import "./styles.css";
-import { AuthProvider } from "./context/auth-context.tsx";
 import { SearchProvider } from "./context/search-context.tsx";
 import { WagmiAppkitProvider } from "./integrations/reown-appkit/provider.tsx";
 import App from "./app.tsx";
@@ -50,11 +49,9 @@ if (rootElement && !rootElement.innerHTML) {
         <WagmiAppkitProvider>
           <LocalizationProvider>
             <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
-              <AuthProvider>
-                <SearchProvider>
-                  <App rootRouter={rootRouter} queryClient={queryClient} />
-                </SearchProvider>
-              </AuthProvider>
+              <SearchProvider>
+                <App rootRouter={rootRouter} queryClient={queryClient} />
+              </SearchProvider>
             </ThemeProvider>
           </LocalizationProvider>
         </WagmiAppkitProvider>
