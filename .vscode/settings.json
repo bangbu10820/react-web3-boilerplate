@@ -13,5 +13,19 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "always",
     "source.fixAll.ts": "always"
-  }
+  },
+  "tailwindCSS.experimental.configFile": "src/styles.css",
+  "tailwindCSS.includeLanguages": {
+    "typescript": "javascript",
+    "typescriptreact": "javascript"
+  },
+  "tailwindCSS.experimental.classRegex": [
+    ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+    ["cn\\(([^)]*)\\)", "(?:'|\"|`)([^\"'`]*)(?:'|\"|`)"]
+  ],
+  "editor.quickSuggestions": {
+    "strings": true
+  },
+  "css.validate": false,
+  "tailwindCSS.validate": true
 }
