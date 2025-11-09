@@ -11,8 +11,8 @@ const gradientButtonVariants = cva(
   {
     variants: {
       variant: {
-        default: "from-[#B57AFF] to-[#6D4999] text-white",
-        secondary: "from-[#2B1B3E] to-[#1E122C] text-primary",
+        default: "from-secondary to-primary text-white",
+        secondary: "from-gray-500 to-gray-800 text-primary",
       },
       gradientDirection: {
         "to-r": "bg-linear-to-r",

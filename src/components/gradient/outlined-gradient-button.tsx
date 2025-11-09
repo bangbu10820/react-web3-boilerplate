@@ -69,9 +69,9 @@ const OutlinedGradientButton = forwardRef<
     {
       className,
       gradientDirection = "to-r",
-      backgroundColor = "#140A1B",
-      fromColor = "#B57AFF",
-      toColor = "#6D4999",
+      backgroundColor = "#fff",
+      fromColor = "#6D4999",
+      toColor = "#75B000",
       ...props
     },
     ref

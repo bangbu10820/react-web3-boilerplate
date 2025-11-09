@@ -14,7 +14,7 @@ const AppGradientText = React.forwardRef<HTMLSpanElement, AppGradientTextProps>(
       <Comp
         ref={ref}
         className={cn(
-          "bg-linear-to-r from-[#B57AFF] to-[#6D4999] bg-clip-text text-transparent",
+          "from-secondary to-primary bg-linear-to-r bg-clip-text text-transparent",
           className
         )}
         {...props}
