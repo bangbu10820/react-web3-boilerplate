@@ -6,6 +6,7 @@ import {
 } from "@solana/spl-token";
 import { STRATEGY_RPC_MAP } from "../constants/network-rpcs";
 import { isSolanaAddress } from "../utils";
+import { formatUnits } from "../utils/format-units";
 import type { SolanaJSONRPCError } from "@solana/web3.js";
 import type {
   ChainStrategy,
@@ -120,18 +121,28 @@ export class SolanaChainStrategy implements ChainStrategy {
       const mintAccount = new PublicKey(tokenAddress);
       const ownerAccount = new PublicKey(ownerAddress);
 
+      const mintAccountInfo = await connection.getAccountInfo(mintAccount);
+      const tokenProgramId = mintAccountInfo?.owner;
+
       const tokenAccount = getAssociatedTokenAddressSync(
         mintAccount,
-        ownerAccount
+        ownerAccount,
+        undefined,
+        tokenProgramId
       );
 
       const result = await connection.getTokenAccountBalance(tokenAccount);
       const balance = result.value;
 
+      let formattedAmount = balance.uiAmountString;
+      if (!formattedAmount) {
+        formattedAmount = formatUnits(BigInt(balance.amount), balance.decimals);
+      }
+
       return {
         balance: {
-          rawAmount: balance.amount.toString() || "0",
-          formattedAmount: balance.uiAmountString || "0",
+          rawAmount: balance.amount.toString(),
+          formattedAmount: formattedAmount,
           tokenAddress: tokenAddress,
         },
       };
