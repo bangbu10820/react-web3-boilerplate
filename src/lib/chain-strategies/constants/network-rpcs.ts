@@ -10,9 +10,11 @@ export const STRATEGY_RPC_MAP: Partial<Record<string, string>> = {
     "https://solana-mainnet.g.alchemy.com/v2/" + ALCHEMY_API_KEY, // solana mainnet
   EtWTRABZaYq6iMfeYKouRu166VU2xqa1:
     "https://solana-devnet.g.alchemy.com/v2/" + ALCHEMY_API_KEY, // solana devnet
-  "1": "https://eth-mainnet.g.alchemy.com/v2/" + ALCHEMY_API_KEY, // ethereum mainnet
+  "1": "https://eth-mainnet.g.alchemy.com/v2/" + ALCHEMY_API_KEY, // ethereum mainnet\
+  "11155111": "https://eth-sepolia.g.alchemy.com/v2/" + ALCHEMY_API_KEY, // ethereum sepolia
 };
 
 export const EvmChainMaps: Partial<Record<string, Network>> = {
   ["1"]: Network.ETH_MAINNET,
+  ["11155111"]: Network.ETH_SEPOLIA,
 };
