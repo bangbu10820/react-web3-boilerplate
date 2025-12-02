@@ -1,5 +1,5 @@
 import { Alchemy } from "alchemy-sdk";
-import { formatEther, getAddress } from "viem";
+import { erc20Abi, formatEther, formatUnits } from "viem";
 import { EvmChainMaps } from "../constants/network-rpcs";
 import { createViemPublicClient } from "../utils/viem";
 import { isEVMAddress } from "../utils";
@@ -127,48 +127,48 @@ export class Eip155ChainStrategy implements ChainStrategy {
     ownerAddress: string;
   }) {
     const { connectionHandler, tokenAddress, ownerAddress } = params;
-    const alchemyClient = connectionHandler.alchemyClient;
-    if (!alchemyClient) {
-      throw new Error("No alchemy client found");
-    }
-    const response = await alchemyClient.core.getTokenBalances(ownerAddress, [
-      tokenAddress,
-    ]);
 
-    if (response.tokenBalances.length === 0) {
-      return {
-        balance: {
-          rawAmount: "0",
-          formattedAmount: "0",
-          tokenAddress: tokenAddress,
-        },
-      };
+    const publicClient = connectionHandler.viemPublicClient;
+    if (!publicClient) {
+      throw new Error("No viem public client found");
     }
-    const { error, tokenBalance, contractAddress } = response.tokenBalances[0];
-    if (error) {
-      throw new Error(error);
+
+    const calls = [
+      // Get balance of the token
+      {
+        address: tokenAddress as Address,
+        abi: erc20Abi,
+        functionName: "balanceOf",
+        args: [ownerAddress as Address],
+      },
+      // Get decimals of the token
+      {
+        address: tokenAddress as Address,
+        abi: erc20Abi,
+        functionName: "decimals",
+      },
+    ];
+
+    const results = await publicClient.multicall({
+      contracts: calls,
+    });
+    const isError = results.some((result) => result.status === "failure");
+    if (isError) {
+      const errors = results.map((result) => result.error).filter(Boolean);
+      throw errors.length > 0
+        ? errors[0]
+        : new Error("Failed to get token balance");
     }
-    if (getAddress(tokenAddress) !== getAddress(contractAddress)) {
-      return {
-        balance: {
-          rawAmount: "0",
-          formattedAmount: "0",
-          tokenAddress: tokenAddress,
-        },
-      };
-    }
+
+    const balance = results[0].result as bigint;
+    const decimals = results[1].result as bigint;
     return {
       balance: {
-        rawAmount: BigInt(tokenBalance || "0").toString(),
+        rawAmount: balance.toString(),
+        formattedAmount: formatUnits(balance, Number(decimals)),
         tokenAddress: tokenAddress,
       },
     };
-    // return {
-    //   balance: {
-    //     rawAmount: balance.toString(),
-    //     formattedAmount: formatEther(balance.toBigInt()),
-    //   },
-    // };
   }
 
   verifyWalletAddress(params: { address: string }) {
