@@ -23,6 +23,11 @@ export interface ChainStrategy {
     tokenAddress: string;
     ownerAddress: string;
   }) => Promise<{ balance: ChainTokenBalance }>;
+
+  getTokenSupply: (params: {
+    connectionHandler: ChainStrategyConnectionHandler;
+    tokenAddress: string;
+  }) => Promise<{ supply: ChainTokenBalance }>;
 }
 
 export interface ChainTokenBalance {

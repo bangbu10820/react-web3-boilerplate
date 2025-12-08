@@ -171,6 +171,54 @@ export class Eip155ChainStrategy implements ChainStrategy {
     };
   }
 
+  async getTokenSupply(params: {
+    connectionHandler: ChainStrategyConnectionHandler;
+    tokenAddress: string;
+  }) {
+    const { connectionHandler, tokenAddress } = params;
+    const publicClient = connectionHandler.viemPublicClient;
+    if (!publicClient) {
+      throw new Error("No viem public client found");
+    }
+
+    const calls = [
+      // Get total supply of the token
+      {
+        address: tokenAddress as Address,
+        abi: erc20Abi,
+        functionName: "totalSupply",
+      },
+      // Get decimals of the token
+      {
+        address: tokenAddress as Address,
+        abi: erc20Abi,
+        functionName: "decimals",
+      },
+    ];
+
+    const results = await publicClient.multicall({
+      contracts: calls,
+    });
+    const isError = results.some((result) => result.status === "failure");
+    if (isError) {
+      const errors = results.map((result) => result.error).filter(Boolean);
+      throw errors.length > 0
+        ? errors[0]
+        : new Error("Failed to get token supply");
+    }
+
+    const supply = results[0].result as bigint;
+    const decimals = results[1].result as bigint;
+
+    return {
+      supply: {
+        rawAmount: supply.toString(),
+        formattedAmount: formatUnits(supply, Number(decimals)),
+        tokenAddress: tokenAddress,
+      },
+    };
+  }
+
   verifyWalletAddress(params: { address: string }) {
     const { address } = params;
     return isEVMAddress(address);

@@ -3,6 +3,7 @@ import {
   TOKEN_2022_PROGRAM_ID,
   TOKEN_PROGRAM_ID,
   getAssociatedTokenAddressSync,
+  getMint,
 } from "@solana/spl-token";
 import { STRATEGY_RPC_MAP } from "../constants/network-rpcs";
 import { isSolanaAddress } from "../utils";
@@ -163,6 +164,34 @@ export class SolanaChainStrategy implements ChainStrategy {
         throw error;
       }
     }
+  }
+
+  async getTokenSupply(params: {
+    connectionHandler: ChainStrategyConnectionHandler;
+    tokenAddress: string;
+  }) {
+    const { connectionHandler, tokenAddress } = params;
+    const connection = connectionHandler.solanaConnection;
+    if (!connection) {
+      throw new Error("No connection found");
+    }
+    const mintAccount = new PublicKey(tokenAddress);
+    const mintAccountInfo = await connection.getAccountInfo(mintAccount);
+
+    const mintInfo = await getMint(
+      connection,
+      mintAccount,
+      undefined,
+      mintAccountInfo?.owner
+    );
+
+    return {
+      supply: {
+        rawAmount: mintInfo.supply.toString(),
+        formattedAmount: formatUnits(mintInfo.supply, mintInfo.decimals),
+        tokenAddress: tokenAddress,
+      },
+    };
   }
 
   verifyWalletAddress(params: { address: string }) {
