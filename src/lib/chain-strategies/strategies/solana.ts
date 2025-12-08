@@ -54,7 +54,9 @@ export class SolanaChainStrategy implements ChainStrategy {
     return {
       balance: {
         rawAmount: balance.toString(),
-        formattedAmount: (balance / LAMPORTS_PER_SOL).toString(),
+        formattedAmount: (
+          BigInt(balance) / BigInt(LAMPORTS_PER_SOL)
+        ).toString(),
       },
     };
   }
