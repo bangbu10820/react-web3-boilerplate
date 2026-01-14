@@ -3,7 +3,6 @@ import { ThemeSwitch } from "@/components/theme-switch";
 import { Header } from "@/components/layout/header";
 import { TypographyH1 } from "@/components/typography";
 import { Search } from "@/components/search";
-import { ConnectWalletButton } from "@/components/connect-wallet-button";
 
 export default function Dashboard() {
   return (
@@ -15,7 +14,6 @@ export default function Dashboard() {
         </TypographyH1>
         <div className="ml-auto flex items-center space-x-4">
           <Search />
-          <ConnectWalletButton />
           <ThemeSwitch />
           {/* <ProfileDropdown /> */}
         </div>
