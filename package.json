@@ -39,6 +39,7 @@
     "@tanstack/react-query-persist-client": "^5.85.2",
     "@tanstack/react-router": "^1.130.2",
     "@tanstack/zod-adapter": "^1.131.16",
+    "alchemy-sdk": "^3.6.5",
     "axios": "^1.11.0",
     "bs58": "^6.0.0",
     "class-variance-authority": "^0.7.1",
